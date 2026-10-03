@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Otomobil Karşılaştırma</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    color: #17202a;
+}
+
+header {
+    background: #111827;
+    color: white;
+    padding: 22px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 26px;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 20px;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+
+h2 {
+    margin-top: 0;
+}
+
+.select-area {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+select, button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+}
+
+select {
+    border: 1px solid #bbb;
+    background: white;
+}
+
+button {
+    border: 0;
+    background: #2563eb;
+    color: white;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+button:hover {
+    background: #1d4ed8;
+}
+
+.compare-title {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    text-align: center;
+}
+
+.vehicle-name {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.metric {
+    margin: 20px 0;
+}
+
+.metric-title {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.bar-background {
+    width: 100%;
+    height: 22px;
+    background: #e5e7eb;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.bar {
+    height: 100%;
+    width: 0;
+    transition: width 1.2s ease;
+}
+
+.car1 {
+    background: #2563eb;
+}
+
+.car2 {
+    background: #dc2626;
+}
+
+.pkç {
+    position: relative;
+    height: 130px;
+    background: #111827;
+    border-radius: 12px;
+    padding: 15px;
+    overflow: hidden;
+}
+
+.track {
+    position: relative;
+    height: 45px;
+    border-bottom: 2px dashed #9ca3af;
+}
+
+.car {
+    position: absolute;
+    left: 0;
+    top: 5px;
+    width: 45px;
+    height: 30px;
+    border-radius: 7px;
+    transition: left linear;
+}
+
+.car1-track {
+    background: #2563eb;
+}
+
+.car2-track {
+    background: #dc2626;
+}
+
+.finish {
+    position: absolute;
+    right: 10px;
+    top: 0;
+    height: 90px;
+    border-right: 4px solid white;
+}
+
+.gear {
+    position: absolute;
+    top: -30px;
+    left: 0;
+    background: white;
+    color: #111827;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    line-height: 25px;
+    font-size: 13px;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity .2s;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.info {
+    padding: 12px;
+    background: #f3f4f6;
+    border-radius: 8px;
+}
+
+@media (max-width: 700px) {
+    .select-area,
+    .compare-title,
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="container">
+        <h1>Otomobil Karşılaştırma</h1>
+        <p>Teknik veriler ve performans karşılaştırması</p>
+    </div>
+</header>
+
+<main class="container">
+
+    <section class="card">
+        <h2>Araç Seç</h2>
+
+        <div class="select-area">
+            <select id="car1">
+                <option value="egea">Fiat Egea 1.3 Multijet</option>
+                <option value="civic">Honda Civic 1.5</option>
+            </select>
+
+            <select id="car2">
+                <option value="civic">Honda Civic 1.5</option>
+                <option value="egea">Fiat Egea 1.3 Multijet</option>
+            </select>
+        </div>
+
+        <button onclick="compareCars()">Karşılaştır</button>
+    </section>
+
+    <section class="card">
+
+        <div class="compare-title">
+            <div>
+                <div class="vehicle-name" id="name1">Fiat Egea 1.3 Multijet</div>
+            </div>
+
+            <div>
+                <div class="vehicle-name" id="name2">Honda Civic 1.5</div>
+            </div>
+        </div>
+
+        <div id="metrics"></div>
+
+    </section>
+
+    <section class="card">
+
+        <h2>1200 Metre Performans Karşılaştırması</h2>
+
+        <p>
+            Araçlar aynı başlangıç noktasından hareket eder.
+            Animasyon gerçek performans verilerine göre hesaplanır.
+        </p>
+
+        <div class="pkç">
+
+            <div class="track">
+                <div id="trackCar1" class="car car1-track">
+                    <span id="gear1" class="gear">1</span>
+                </div>
+            </div>
+
+            <div class="track">
+                <div id="trackCar2" class="car car2-track">
+                    <span id="gear2" class="gear">1</span>
+                </div>
+            </div>
+
+            <div class="finish"></div>
+
+        </div>
+
+        <button onclick="startRace()">PKÇ'yi Başlat</button>
+
+    </section>
+
+    <section class="card">
+
+        <h2>Teknik Özellikler</h2>
+
+        <div class="info-grid">
+
+            <div class="info">
+                <strong id="specPower1"></strong>
+            </div>
+
+            <div class="info">
+                <strong id="specPower2"></strong>
+            </div>
+
+            <div class="info">
+                <strong id="specTorque1"></strong>
+            </div>
+
+            <div class="info">
+                <strong id="specTorque2"></strong>
+            </div>
+
+            <div class="info">
+                <strong id="specWeight1"></strong>
+            </div>
+
+            <div class="info">
+                <strong id="specWeight2"></strong>
+            </div>
+
+            <div class="info">
+                <strong id="spec0100_1"></strong>
+            </div>
+
+            <div class="info">
+                <strong id="spec0100_2"></strong>
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<script>
+
+const cars = {
+
+    egea: {
+        name: "Fiat Egea 1.3 Multijet",
+        power: 95,
+        torque: 200,
+        weight: 1250,
+        zero100: 11.7,
+        zero400: 18.0,
+        zero1200: 39.5,
+
+        gears: [
+            { time: 4.0, gear: 2 },
+            { time: 8.0, gear: 3 },
+            { time: 14.0, gear: 4 }
+        ]
+    },
+
+    civic: {
+        name: "Honda Civic 1.5",
+        power: 129,
+        torque: 180,
+        weight: 1350,
+        zero100: 8.5,
+        zero400: 16.2,
+        zero1200: 34.5,
+
+        gears: [
+            { time: 3.0, gear: 2 },
+            { time: 6.0, gear: 3 },
+            { time: 10.0, gear: 4 },
+            { time: 15.0, gear: 5 }
+        ]
+    }
+
+};
+
+
+function compareCars() {
+
+    const c1 = cars[document.getElementById("car1").value];
+    const c2 = cars[document.getElementById("car2").value];
+
+    document.getElementById("name1").textContent = c1.name;
+    document.getElementById("name2").textContent = c2.name;
+
+    document.getElementById("specPower1").textContent =
+        "Güç: " + c1.power + " HP";
+
+    document.getElementById("specPower2").textContent =
+        "Güç: " + c2.power + " HP";
+
+    document.getElementById("specTorque1").textContent =
+        "Tork: " + c1.torque + " Nm";
+
+    document.getElementById("specTorque2").textContent =
+        "Tork: " + c2.torque + " Nm";
+
+    document.getElementById("specWeight1").textContent =
+        "Ağırlık: " + c1.weight + " kg";
+
+    document.getElementById("specWeight2").textContent =
+        "Ağırlık: " + c2.weight + " kg";
+
+    document.getElementById("spec0100_1").textContent =
+        "0-100 km/s: " + c1.zero100 + " sn";
+
+    document.getElementById("spec0100_2").textContent =
+        "0-100 km/s: " + c2.zero100 + " sn";
+
+
+    const metrics = document.getElementById("metrics");
+
+    metrics.innerHTML = "";
+
+    createMetric(
+        "Güç",
+        c1.power,
+        c2.power,
+        "HP",
+        true
+    );
+
+    createMetric(
+        "Tork",
+        c1.torque,
+        c2.torque,
+        "Nm",
+        true
+    );
+
+    createMetric(
+        "0-100 km/s",
+        c1.zero100,
+        c2.zero100,
+        "sn",
+        false
+    );
+
+    createMetric(
+        "0-400 metre",
+        c1.zero400,
+        c2.zero400,
+        "sn",
+        false
+    );
+
+}
+
+
+function createMetric(title, value1, value2, unit, higherBetter) {
+
+    const max = Math.max(value1, value2);
+
+    let width1 = (value1 / max) * 100;
+    let width2 = (value2 / max) * 100;
+
+    if (!higherBetter) {
+
+        const min = Math.min(value1, value2);
+
+        width1 = (min / value1) * 100;
+        width2 = (min / value2) * 100;
+
+    }
+
+    const box = document.createElement("div");
+
+    box.className = "metric";
+
+    box.innerHTML = `
+        <div class="metric-title">
+            <span>${title}</span>
+            <span>${value1} ${unit} | ${value2} ${unit}</span>
+        </div>
+
+        <div class="bar-background">
+            <div class="bar car1" style="width:${width1}%"></div>
+        </div>
+
+        <br>
+
+        <div class="bar-background">
+            <div class="bar car2" style="width:${width2}%"></div>
+        </div>
+    `;
+
+    document.getElementById("metrics").appendChild(box);
+}
+
+
+function startRace() {
+
+    const c1 = cars[document.getElementById("car1").value];
+    const c2 = cars[document.getElementById("car2").value];
+
+    const car1 = document.getElementById("trackCar1");
+    const car2 = document.getElementById("trackCar2");
+
+    const gear1 = document.getElementById("gear1");
+    const gear2 = document.getElementById("gear2");
+
+    car1.style.transitionDuration = c1.zero1200 + "s";
+    car2.style.transitionDuration = c2.zero1200 + "s";
+
+    car1.style.left = "calc(100% - 45px)";
+    car2.style.left = "calc(100% - 45px)";
+
+    gear1.style.opacity = 1;
+    gear2.style.opacity = 1;
+
+    c1.gears.forEach(change => {
+
+        setTimeout(() => {
+            gear1.textContent = change.gear;
+        }, change.time * 1000);
+
+    });
+
+    c2.gears.forEach(change => {
+
+        setTimeout(() => {
+            gear2.textContent = change.gear;
+        }, change.time * 1000);
+
+    });
+
+}
+
+
+compareCars();
+
+</script>
+
+</body>
+</html>
